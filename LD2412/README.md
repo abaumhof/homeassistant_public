@@ -22,4 +22,5 @@ So pretty much no configuration is supported at this time.
 
 ## Screenshot
 It will look something like this
+
 ![image](https://github.com/abaumhof/homeassistant_public/assets/9362029/107d43c0-a383-4ae9-80e1-061fe71c298f)
