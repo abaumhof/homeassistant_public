@@ -18,4 +18,8 @@ So pretty much no configuration is supported at this time.
 
 ## Usage
 * Place ld2412.h into your esphome configuration folder
-* Create new device with the yaml in this repository
+* Add the ld2412.yaml to your YAML file for your device
+
+## Screenshot
+It will look something like this
+![image](https://github.com/abaumhof/homeassistant_public/assets/9362029/107d43c0-a383-4ae9-80e1-061fe71c298f)
