@@ -1,0 +1,62 @@
+uart:
+  id: uart_1
+  tx_pin: GPIO32
+  rx_pin: GPIO4 
+  baud_rate: 115200         # thats for LD2412
+#  baud_rate: 256000         # that's for LD2410
+  parity: NONE
+#  stop_bits: 1
+#  debug:
+#    direction: BOTH
+#    dummy_receiver: false
+#    after:
+#      delimiter: "\n"
+#    sequence:
+#      - lambda: UARTDebug::log_string(direction, bytes);
+
+custom_component:
+  - lambda: |-
+      return {new LD2412(id(uart_1))};
+    components:
+      - id: ld2412
+
+binary_sensor:
+  - platform: gpio
+    name: "Mmwave Detected via GPIO"
+    device_class: motion
+    pin:
+      number: GPIO5
+      mode: INPUT_PULLDOWN
+  - platform: custom
+    lambda: |-
+      auto uart_component = static_cast<LD2412 *>(ld2412);
+      return {uart_component->hasTarget,uart_component->hasMovingTarget,uart_component->hasStillTarget};
+    binary_sensors:
+      - name: "Has Target"
+      - name: "Has Moving Target"
+      - name: "Has Still Target"
+
+sensor: 
+  - platform: custom
+    lambda: |-
+      auto uart_component = static_cast<LD2412 *>(ld2412);
+      return {uart_component->movingTargetDistance,uart_component->movingTargetEnergy,uart_component->stillTargetDistance,uart_component->stillTargetEnergy};
+    sensors:
+      - name: "Moving Target Distance"
+        unit_of_measurement: "cm"
+        accuracy_decimals: 0
+      - name: "Moving Target Energy"
+        unit_of_measurement: "%"
+        accuracy_decimals: 0
+      - name: "Still Target Distance"
+        unit_of_measurement: "cm"
+        accuracy_decimals: 0
+      - name: "Still Target Energy"
+        unit_of_measurement: "%"
+        accuracy_decimals: 0
+
+button:
+  - platform: template
+    name: "Reboot LD2412"
+    on_press:
+      lambda: 'static_cast<LD2412 *>(ld2412)->reboot();'
